@@ -1,0 +1,167 @@
+    {% extends 'basic.html' %}
+    {% block title %}Resort Hideaway
+    {% endblock title %}
+    {% block body %}
+
+     <!--Booking Section starts here-->
+    <section>
+        <div class="container-fluid py-5 px-5 ">
+            <form action="" method="POST">
+            {% csrf_token %}
+            <div class="row justify-content-center py-5 bg-light">
+                <div class="col-lg-4">
+                    <label for=" ">Location</label>
+                    <select class="form-control" name="search_location" id="roomstatus">
+                        <!--Resort id and location-->
+                        <option>Location</option>
+                        {% for each_location,each_resort_id in all_location %}
+                            
+                            <option value={{each_resort_id}}>{{each_location}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {%load app_tags%}
+
+                <div class="col-lg-2">
+                    <label for=" ">Check in</label>
+                    <input class="form-control mr-sm-2" type="date" placeholder="Check in" name="cin" min={%todays_date%} max={%max_date%} aria-label="Search" required="required">
+                </div>
+
+                <div class="col-lg-2">
+                    <label for=" ">Check Out</label>
+                    <input class="form-control mr-sm-2" type="date" placeholder="Check out" name="cout" min={%tomorrow%} max={%max_date%} aria-label="Search" required="required">
+                </div>
+
+                <div class="col-lg-2">
+                    <label for=" ">Person</label>
+                    <input class="form-control mr-sm-2" type="number" placeholder="Person" name="capacity" aria-label="Search" required="required">
+                </div>
+
+                <div class="col-lg-2">
+                    <input type="submit" value="Check Availability" class="form-control mr-sm-2 btn btn-primary my-4" style="position: relative;top: 7px;">
+                </div>
+                {% if rooms %}
+                <p class="text-center text-success">Rooms Available</p>
+                {% endif %}
+                
+            </div>
+            </form>
+
+        </div>
+    </section>
+    <!--Booking Section ends here-->
+    <!--Fetched results appear here-->
+    <div class="container-fluid px-0 mx-aut">
+        {% if rooms %}
+           <table class="table">
+               <thead class="o">
+                <th>Type</th>
+                <th>Location</th>
+                <th>Person</th>
+                <th>price</th>
+                <th>Action</th>
+            </thead>
+            {% for r in rooms %}
+                <tr class="">
+                <td>{{ r.get_room_type_display }}</td>
+                <td>{{ r.resort.location }}</td>
+                <td>{{ r.capacity }}</td>
+                <td>{{ r.price }}</td>
+                
+                <td><a href="/user/book-room?roomid={{r.id}}"><button class="btn btn-warning">Book Now</button></a></td>
+                </tr>
+            {% endfor %}
+            
+           </table> 
+        {% endif %}
+    </div>
+    <!--Fetched results ends here-->
+
+
+    <h3 class="text-center text-dark">Choose from below types</h3>
+
+    <!--Room tables starts here-->
+    <div class="container-fluid px-0" style="border:1px solid red">
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="text-center">Room Type</th>
+                    <th class="text-center">Glimpse</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">
+                        <h1>Budget Room</h1>
+                        <p>Price: €150 / day</p>
+
+                        <p>Size : 30 Sqft</p>
+                        <p>Capacity : Max person 2</p>
+
+                        <p>Services : Wi-Fi, Rejuvenation service, Pet-friendly property</p>
+                        
+                        <p> Views : Sea View</p>
+                    </td>
+                    <td class="text-center">
+                        <div class="shadow p-3 mb-5 rounded col-sm-6 rounded float-right">
+                            <figure>
+                                <img src="https://www.rwlasvegas.com/wp-content/uploads/2021/10/D1M.jpg" alt="" class="img-fluid bg-image hover-overlay hover-zoom hover-shadow ripple">
+                            </figure>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="text-center">
+                        <!--Room details-->
+                        <h1>Premium Room</h1>
+                        <p>Price: €200 / day</p>
+
+                        <p>Size : 40 Sqft</p>
+                        <p>Capacity : Max person 4</p>
+
+                        <p>Services : Wi-fi, Jacuzzi rooms, Pet-friendly property</p>
+                        <p> Views : Sea View</p>
+                    </td>
+                    <td class="text-center">
+                        
+                        <!--Room Images-->
+                        <div class="shadow p-3 mb-5 rounded col-sm-6 rounded float-right">
+                            <figure>
+                                <img src="https://www.travelandleisure.com/thmb/h7jkfDW9Un_uTAhc_I9xNxmEojU=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/six-senses-zil-pasyon-four-bed-residence-LUXESUITE0122-d3a07a654b294cef8dba5f658993d8b2.jpg" alt="" class="img-fluid bg-image hover-overlay hover-zoom hover-shadow ripple">
+                            </figure>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="text-center">
+                        <!--Room details-->
+                        <h1>Deluxe Room</h1>
+                        <p>Price: €300 / day</p>
+
+                        <p>Size : 50 Sqft</p>
+                        <p>Capacity : Max person 6</p>
+
+                        <p>Services : Wi-Fi, TV, Bathroom, Attached Pool, Pet-friendly property</p>
+                        <p> Views : Nature view</p>
+                    </td>
+                    <td class="text-center">
+                        <div class="shadow p-3 mb-5 rounded col-sm-6 rounded float-right">
+                            <figure>
+                                <img src="https://media.cnn.com/api/v1/images/stellar/prod/170424145721-11-hotels-in-the-elements.jpg?q=w_2000,h_1125,x_0,y_0,c_fill" alt="" class="img-fluid bg-image hover-overlay hover-zoom hover-shadow ripple">
+                            </figure>
+                        </div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+    <!--Roo tables ends here-->
+
+    {% endblock body %}
+   
+   
