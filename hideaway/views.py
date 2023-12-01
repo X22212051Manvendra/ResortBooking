@@ -9,7 +9,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 import datetime
-
+import json
+import boto3
+from django.conf import settings
 
 # Create your views here.
 
@@ -269,11 +271,11 @@ def book_room(request):
         room = Rooms.objects.all().get(id=room_id)
         # for finding the reserved rooms on this time period for excluding from the query set
         for each_reservation in Reservation.objects.all().filter(room=room):
-            if str(each_reservation.check_in) < str(request.POST['check_in']) and str(each_reservation.check_out) < str(
+            if str(each_reservation.check_in) <= str(request.POST['check_in']) and str(each_reservation.check_out) <= str(
                     request.POST['check_out']):
                 pass
-            elif str(each_reservation.check_in) > str(request.POST['check_in']) and str(
-                    each_reservation.check_out) > str(request.POST['check_out']):
+            elif str(each_reservation.check_in) >= str(request.POST['check_in']) and str(
+                    each_reservation.check_out) >= str(request.POST['check_out']):
                 pass
             else:
                 messages.warning(request, "Sorry This Room is unavailable for Booking")
@@ -297,6 +299,20 @@ def book_room(request):
         reservation.comments=request.POST['comments']
 
         reservation.save()
+        try:
+            AWS_REGION = "eu-west-3"
+            notification = request.POST['email']
+            session = boto3.Session(getattr(settings, "AWS_ACCESS_KEY_ID", None),
+                                    getattr(settings, "AWS_SECRET_ACCESS_KEY", None),
+                                    getattr(settings, "AWS_SESSION_TOKEN", None))
+            client = session.client('sns', region_name=AWS_REGION)
+            response = client.publish (
+                TargetArn = "arn:aws:sns:eu-west-3:250738637992:BookingEmailTopic",
+                Message = json.dumps({'default': notification}),
+                MessageStructure = 'json'
+            )
+            print(response)
+        except Exception as e: print(e)
 
         messages.success(request, "Congratulations! Booking Successful")
 
