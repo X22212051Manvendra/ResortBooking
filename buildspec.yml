@@ -5,7 +5,9 @@ phases:
             python: 3.11
         commands:
             - pip install --upgrade pip
-            - sudo yum install libmysqlclient-dev
+            - pip install MySQL-python
+            - pip install mysql-connector-python
+            - pip install pymysql
             - pip install -r requirements.txt
     pre_build:
         commands:
