@@ -6,8 +6,9 @@ phases:
         commands:
             - sudo yum makecache --refresh
             - sudo yum update -y
-            - sudo yum -y install pkgconfig mariadb-dev
+            - yum install -y amazon-linux-extras
             - pip install --upgrade pip
+            - pip install mysqlclient
             - pip install -r requirements.txt
     pre_build:
         commands:
